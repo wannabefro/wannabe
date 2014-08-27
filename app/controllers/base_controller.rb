@@ -18,13 +18,13 @@ class BaseController
     @params_hash
   end
 
+  def render(view)
+    File.read(File.join(File.dirname(__FILE__), '..', 'views', "#{view}.html"))
+  end
+
   private
 
   def parse_query_string(query)
-    pairs = query.split('&')
-    pairs.each do |pair|
-      split_pair = pair.split('=')
-      @params_hash[split_pair[0].to_sym] = split_pair[1]
-    end
+    @params_hash.merge!(Rack::Utils.parse_nested_query(query))
   end
 end

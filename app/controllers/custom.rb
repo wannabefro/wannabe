@@ -1,9 +1,8 @@
 class Custom < BaseController
 
   def index
-    response.body = "Hello World"
+    # response.body = "<h1>Hello World</h1>"
     response.status_code = 200
-    puts params
   end
 
   def show
