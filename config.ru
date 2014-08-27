@@ -1,3 +1,5 @@
+#\ -p 9876
+
 require 'bundler'
 Bundler.require
 
