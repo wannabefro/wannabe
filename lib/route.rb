@@ -16,9 +16,9 @@ class Route
 
   def execute(env)
     Response.new.tap do |response|
+      response.status_code = 200
       action = klass.new(env, response)
-      action.send(instance_method.to_sym)
-      response.body = action.send(:render, "#{klass.to_s.downcase}/#{instance_method}")
+      response.body = action.send(instance_method.to_sym)
     end
   end
 

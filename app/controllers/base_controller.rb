@@ -1,3 +1,5 @@
+require 'erb'
+require 'ostruct'
 require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'response')
 
 class BaseController
@@ -10,21 +12,26 @@ class BaseController
   end
 
   def params
-    @params_hash = {
-      action: caller_locations(1,1)[0].label,
-      method: env['REQUEST_METHOD']
-    }
-    parse_query_string(env['QUERY_STRING'])
-    @params_hash
+    @params_hash ||= build_params
   end
 
-  def render(view)
-    File.read(File.join(File.dirname(__FILE__), '..', 'views', "#{view}.html"))
+  def erb(view, options)
+    content = File.read(File.join(File.dirname(__FILE__), '..', 'views', "#{view}.html.erb"))
+    namespace = OpenStruct.new(options[:locals])
+    renderer = ERB.new(content)
+    renderer.result(namespace.instance_eval { binding })
   end
 
   private
 
+  def build_params
+    {
+      action: caller_locations(1,1)[0].label,
+      method: env['REQUEST_METHOD']
+    }.merge(parse_query_string(env['QUERY_STRING']))
+  end
+
   def parse_query_string(query)
-    @params_hash.merge!(Rack::Utils.parse_nested_query(query))
+    Rack::Utils.parse_nested_query(query)
   end
 end

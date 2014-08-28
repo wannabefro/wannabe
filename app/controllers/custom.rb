@@ -1,8 +1,10 @@
 class Custom < BaseController
 
   def index
-    # response.body = "<h1>Hello World</h1>"
-    response.status_code = 200
+    test = 'hello universe'
+    id = params['id']
+
+    erb :'custom/index', locals: { test: test, id: id }
   end
 
   def show
