@@ -1,4 +1,5 @@
 require 'erb'
+require 'tilt'
 require 'ostruct'
 require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'response')
 
@@ -16,10 +17,14 @@ class BaseController
   end
 
   def erb(view, options)
-    content = File.read(File.join(File.dirname(__FILE__), '..', 'views', "#{view}.html.erb"))
+    layout = options[:layout] || 'layouts/main'
+    layout = File.join(File.dirname(__FILE__), '..', 'views', "#{layout}.html.erb")
+    content = File.join(File.dirname(__FILE__), '..', 'views', "#{view}.html.erb")
     namespace = OpenStruct.new(options[:locals])
-    renderer = ERB.new(content)
-    renderer.result(namespace.instance_eval { binding })
+    template = Tilt::ERBTemplate.new(layout)
+    template.render { 
+      Tilt::ERBTemplate.new(content).render(namespace)
+    }
   end
 
   private

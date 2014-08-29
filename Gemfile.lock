@@ -9,6 +9,7 @@ GEM
       slop (~> 3.4)
     rack (1.5.2)
     slop (3.5.0)
+    tilt (1.4.1)
 
 PLATFORMS
   ruby
@@ -16,3 +17,4 @@ PLATFORMS
 DEPENDENCIES
   pry
   rack (~> 1.5.2)
+  tilt
